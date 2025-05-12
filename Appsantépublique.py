@@ -2,80 +2,67 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from streamlit_lottie import st_lottie
-import requests
+import json
 
-# --- Configuration de la page ---
-st.set_page_config(
-    page_title="Tableau de bord - Santé publique",
-    layout="wide",
-    page_icon="💉"
-)
+# ---------- Chargement des animations ----------
+def load_lottiefile(filepath: str):
+    with open(filepath, "r") as f:
+        return json.load(f)
 
-# --- Fonction pour charger une animation Lottie ---
-def load_lottieurl(url: str):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+lottie_accueil = load_lottiefile("animations/healthcare_animation.json")  # À placer dans un dossier animations
 
-# Animation d'en-tête
-lottie_animation = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_w51pcehl.json")
+# ---------- Page d'accueil attrayante ----------
+st.set_page_config(page_title="Dashboard Santé Publique", page_icon="🩺", layout="wide")
 
-# --- Chargement des données ---
-uploaded_file = st.file_uploader("\U0001F4C2 Importez un fichier CSV de données de santé publique", type=["csv"])
+st.markdown("""
+    <style>
+    .main-header {
+        font-size:3em;
+        font-weight:bold;
+        color:#4CAF50;
+        text-align:center;
+        margin-bottom:0;
+    }
+    .sub-header {
+        font-size:1.2em;
+        color:#555;
+        text-align:center;
+        margin-top:0;
+    }
+    .upload-box {
+        border: 2px dashed #4CAF50;
+        padding: 30px;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    df["Date"] = pd.to_datetime(df["Date"])
+st.markdown("<div class='main-header'>Tableau de bord des Campagnes de Santé Publique</div>", unsafe_allow_html=True)
+st.markdown("<div class='sub-header'>Analyse visuelle et interactive des données sanitaires en RDC</div>", unsafe_allow_html=True)
 
-    st.title("\U0001F489 Tableau de Bord des Campagnes de Santé Publique")
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st_lottie(lottie_accueil, height=250, key="accueil")
 
-    with st.container():
-        st_lottie(lottie_animation, height=200, key="header")
+st.markdown("""
+### \U0001F4E5 Importer vos fichiers CSV de données de santé
+Pour commencer, chargez un ou plusieurs fichiers CSV contenant les informations suivantes :
+- `Date`, `Région`, `Maladie`, `Sexe`, `Tranche_d_âge`, `Nombre_de_cas`
+""")
 
-    # --- Filtres ---
-    with st.sidebar:
-        st.header("\U0001F50D Filtres")
-        maladies = st.multiselect("Choisissez les maladies", options=df["Maladie"].unique(), default=df["Maladie"].unique())
-        regions = st.multiselect("Choisissez les régions", options=df["Région"].unique(), default=df["Région"].unique())
-        sexes = st.multiselect("Sexe", options=df["Sexe"].unique(), default=df["Sexe"].unique())
-        ages = st.multiselect("Tranche d'âge", options=df["Tranche_d_âge"].unique(), default=df["Tranche_d_âge"].unique())
+with st.container():
+    st.markdown("<div class='upload-box'>", unsafe_allow_html=True)
+    uploaded_files = st.file_uploader("Sélectionnez vos fichiers CSV", type=["csv"], accept_multiple_files=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    # --- Application des filtres ---
-    df_filtré = df[
-        df["Maladie"].isin(maladies) &
-        df["Région"].isin(regions) &
-        df["Sexe"].isin(sexes) &
-        df["Tranche_d_âge"].isin(ages)
-    ]
+# Vous pouvez maintenant continuer à utiliser uploaded_files pour l'analyse comme avant...
 
-    # --- Statistiques globales ---
-    total_cas = int(df_filtré["Nombre_de_cas"].sum())
-    nb_enregistrements = df_filtré.shape[0]
+# Exemple de traitement plus bas dans ton app :
+if uploaded_files:
+    dfs = [pd.read_csv(file) for file in uploaded_files]
+    df = pd.concat(dfs, ignore_index=True)
 
-    col1, col2 = st.columns(2)
-    col1.metric("\U0001F4CA Nombre total de cas", f"{total_cas:,}")
-    col2.metric("\U0001F5C2\ufe0f Enregistrements", nb_enregistrements)
-
-    # --- Graphiques ---
-    col3, col4 = st.columns(2)
-
-    with col3:
-        cas_par_maladie = df_filtré.groupby("Maladie")["Nombre_de_cas"].sum().reset_index()
-        fig1 = px.bar(cas_par_maladie, x="Maladie", y="Nombre_de_cas", color="Maladie",
-                      title="\U0001F489 Cas par maladie", text_auto=True)
-        st.plotly_chart(fig1, use_container_width=True)
-
-    with col4:
-        cas_par_region = df_filtré.groupby("Région")["Nombre_de_cas"].sum().reset_index()
-        fig2 = px.pie(cas_par_region, names="Région", values="Nombre_de_cas", title="\U0001F30F Répartition régionale")
-        st.plotly_chart(fig2, use_container_width=True)
-
-    st.markdown("---")
-
-    cas_temps = df_filtré.groupby("Date")["Nombre_de_cas"].sum().reset_index()
-    fig3 = px.line(cas_temps, x="Date", y="Nombre_de_cas", title="\U0001F4C5 Évolution des cas dans le temps")
-    st.plotly_chart(fig3, use_container_width=True)
-
+    # Code de nettoyage ou visualisation...
 else:
-    st.info("\u26A0\ufe0f Veuillez importer un fichier CSV pour visualiser les données.")
+    st.info("Veuillez importer au moins un fichier CSV pour afficher le tableau de bord.")
