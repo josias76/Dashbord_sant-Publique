@@ -38,7 +38,7 @@ streamlit run app.py
 Statisticien, Data Analyst & Data Scientist passionné par l'impact de la donnée sur les politiques publiques.
 
 - GitHub : [github.com/josiasnteme](https://github.com/josiasnteme)
-- LinkedIn : [[linkedin.com](https://www.linkedin.com/in/josias-nteme-95757721a/)
+- LinkedIn : [linkedin.com](https://www.linkedin.com/in/josias-nteme-95757721a/)
 - Email : josias76nteme@gmail.com
 
 ![Logo du projet](A_logo_for_an_e-commerce_dashboard_is_displayed_in.png)
