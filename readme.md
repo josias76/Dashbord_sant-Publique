@@ -1,4 +1,4 @@
-# Tableau de bord des campagnes de santé publique \U0001F489
+# Tableau de bord des campagnes de santé publique
 
 Cette application Streamlit permet d'analyser les données relatives aux campagnes de santé publique en République Démocratique du Congo. Elle offre une visualisation interactive des cas de maladies enregistrés selon les régions, les tranches d'âge, le sexe et dans le temps.
 
@@ -43,5 +43,5 @@ Statisticien, Data Analyst & Data Scientist passionné par l'impact de la donné
 
 ![Logo du projet](A_logo_for_an_e-commerce_dashboard_is_displayed_in.png)
 
----
+
 > Ce projet est réalisé dans un but éducatif et peut être adapté pour tout besoin de visualisation de données en santé publique.
