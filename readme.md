@@ -41,7 +41,8 @@ Statisticien, Data Analyst & Data Scientist passionné par l'impact de la donné
 - LinkedIn : [linkedin.com](https://www.linkedin.com/in/josias-nteme-95757721a/)
 - Email : josias76nteme@gmail.com
 
-![Logo du projet](A_logo_for_an_e-commerce_dashboard_is_displayed_in.png)
 
+
+![logo](https://github.com/user-attachments/assets/f760cc51-4d67-4d9d-955c-45e16e3ff378)
 
 > Ce projet est réalisé dans un but éducatif et peut être adapté pour tout besoin de visualisation de données en santé publique.
